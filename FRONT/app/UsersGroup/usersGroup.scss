@@ -1,0 +1,21 @@
+@import '../styles/global';
+
+body {
+
+    #container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 50px;
+        label{
+            font-size: 40px;
+            color: #4f4f4f;
+        }
+        input {
+            margin: 10px;
+            width: auto;
+        }
+
+    }
+}
