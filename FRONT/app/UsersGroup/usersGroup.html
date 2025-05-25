@@ -20,27 +20,30 @@
 
     </header>
     <h1 id="batmanRobin" class="hidden">BATMAN I ROBIN STIZU U POMOC!</h1>
-    <table>
-        <thead class="hidden">
-            <tr>
-                <th>ID</th>
-                <th>Korisnicko ime</th>
-                <th>Ime</th>
-                <th>Prezime</th>
-                <th>Datum rodjenja</th>
-            </tr>
-        </thead>
-        <tbody id="userTableBody">
+    <div id="main">
+        <form id="groupForm">
+            <label for="groupId">Unesite ID grupe:</label>
+            <input type="number" id="groupId" name="id" placeholder="Unesite ID grupe" required>
+            <button type="button" id="searchButton">Prikazi</button>
+        </form>
 
-        </tbody>
-        <div id="container">
-            <form>
-                <label for="groupId">Unesite ID grupe:</label>
-                <input type="number" id="groupId" placeholder="Unesite ID grupe" required>
-                <button type="submit" id="searchButton">Prikazi</button>
-            </form>
-        </div>
-    </table>
+        <table>
+            <thead class="hidden">
+                <tr>
+                    <th>ID</th>
+                    <th>Korisnicko ime</th>
+                    <th>Ime</th>
+                    <th>Prezime</th>
+                    <th>Datum rodjenja</th>
+                </tr>
+            </thead>
+            <tbody id="userTableBody">
+
+            </tbody>
+        </table>
+
+    </div>
+
     <script src="usersGroup.js"></script>
 </body>
 

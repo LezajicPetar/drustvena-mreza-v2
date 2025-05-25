@@ -56,4 +56,9 @@ table tr td {
   text-align: center;
 }
 
+#main {
+  display: flex;
+  justify-content: center;
+}
+
 /*# sourceMappingURL=index.css.map */
