@@ -60,5 +60,16 @@ table tr td {
   display: flex;
   justify-content: center;
 }
+#main table .izmeniBtn {
+  background-color: #00BFA6;
+  color: #1E2A38;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 6px;
+}
+#main table .izmeniBtn:hover {
+  background-color: #1E2A38;
+  color: #00BFA6;
+}
 
 /*# sourceMappingURL=index.css.map */

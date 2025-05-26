@@ -62,9 +62,6 @@ body #main {
   align-items: center;
 }
 body #main form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   margin-top: 30px;
 }
 body #main form label {
@@ -73,6 +70,25 @@ body #main form label {
 }
 body #main form input {
   margin: 10px;
+  font-size: 25px;
+  text-align: center;
+  display: inline-block;
+  border: 2px solid #1E2A38;
+  border-radius: 6px;
+  width: 80px;
+  height: 50px;
+}
+body #main form #searchButton {
+  font-size: 25px;
+  padding: 10px;
+  border-radius: 6px;
+  background-color: #1E2A38;
+  color: #00BFA6;
+  cursor: pointer;
+}
+body #main form #searchButton:hover {
+  background-color: #00BFA6;
+  color: #1E2A38;
 }
 body #main table {
   max-width: 700px;

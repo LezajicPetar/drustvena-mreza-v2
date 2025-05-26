@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dodavanje korisnika</title>
+    <link rel="stylesheet" href="../../dist/AddEditUsers/addEditUsers.css">
+</head>
+
+<body>
+    <header>
+        <h1>DODAVANJE NOVOG CLANA</h1>
+        <nav>
+            <ul>
+                <li><a href="../index.html">Pregled svih</a></li>
+                <li><a href="../UsersGroup/usersGroup.html">Korisnici po grupi</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div id="mainContainer">
+        <form id="addEditForm">
+            <div>
+                <label for="korisnickoIme">Korisnicko ime:</label>
+                <input type="text" id="korisnickoIme" name="korisnickoIme" placeholder="Vula305" required>
+            </div>
+            <div>
+                <label for="ime">Ime:</label>
+                <input type="text" id="ime" name="ime" value="" placeholder="Vukasin" required>
+
+            </div>
+            <div>
+                <label for="prezime">Prezime:</label>
+                <input type="text" id="prezime" name="prezime" placeholder="Vulic" required>
+            </div>
+            <div>
+                <label for="datumRodjenja">Datum rodjenja:</label>
+                <input type="date" id="datumRodjenja" name="datumRodjenja" required>
+            </div>
+            <div>
+                <button type="button" id="submitButton">Sacuvaj</button>
+            </div>
+        </form>
+    </div>
+    <script src="addEditUsers.js"></script>
+</body>
+
+</html>

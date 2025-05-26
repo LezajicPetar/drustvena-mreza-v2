@@ -1,3 +1,98 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
 
+.hidden {
+  display: none;
+}
+
+#batmanRobin {
+  text-align: center;
+  margin: 50px;
+  font-size: 30px;
+  color: #1E2A38;
+}
+
+header {
+  background-color: #1E2A38;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+}
+header nav {
+  display: flex;
+}
+header nav ul {
+  list-style: none;
+  font-size: 18px;
+}
+header nav ul li {
+  margin: 15px;
+}
+header nav ul li a {
+  padding: 6px;
+  text-decoration: none;
+  color: #00BFA6;
+  font-weight: bold;
+}
+
+table {
+  margin: 50px;
+  border: 2px solid #1E2A38;
+  border-collapse: collapse;
+}
+table tr:hover {
+  background-color: rgba(156, 153, 153, 0.3098039216);
+}
+table tr th,
+table tr td {
+  border: 2px solid #1E2A38;
+  padding: 10px;
+  text-align: center;
+}
+
+#mainContainer {
+  display: flex;
+  justify-content: center;
+}
+#mainContainer form {
+  margin: 50px;
+  max-width: 600px;
+}
+#mainContainer form div {
+  margin: 20px;
+}
+#mainContainer form div label {
+  display: inline-block;
+  width: 200px;
+  font-size: 20px;
+  font-weight: bold;
+}
+#mainContainer form div input {
+  height: 50px;
+  font-size: 20px;
+  border-radius: 6px;
+}
+#mainContainer form div input:hover {
+  background-color: rgba(156, 153, 153, 0.3098039216);
+}
+#mainContainer form div #submitButton {
+  margin-top: 10px;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 6px;
+  background-color: #1E2A38;
+  color: #00BFA6;
+}
+#mainContainer form div #submitButton:hover {
+  background-color: #00BFA6;
+  color: #1E2A38;
+}
 
 /*# sourceMappingURL=addEditUsers.css.map */

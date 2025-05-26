@@ -1,8 +1,8 @@
-function Initialize() {
-    GetAll()
+function initialize() {
+    getAll()
 }
 
-function GetAll() {
+function getAll() {
 
     fetch('http://localhost:30471/api/korisnici')
         .then(response => {
@@ -11,13 +11,13 @@ function GetAll() {
             }
             return response.json()
         })
-        .then(korisnici => CreateTableRows(korisnici))
+        .then(korisnici => createTableRows(korisnici))
         .catch(error => {
             console.error('Error:' + error.message)
         })
 }
 
-function CreateTableRows(userData) {
+function createTableRows(userData) {
     let tableBody = document.querySelector('#userTableBody')
     tableBody.innerHTML = ''
 
@@ -44,9 +44,15 @@ function CreateTableRows(userData) {
             <td>${user.ime}</td>
             <td>${user.prezime}</td>
             <td>${user.datumRodjenja}</td>
+            <td><button type='button' class='izmeniBtn'>Izmeni</button></td>
         `
+        let izmeniBtn = tr.querySelector('.izmeniBtn')
+        izmeniBtn.addEventListener('click', () => {
+            window.location.href = `./addEditUsers/addEditUsers.html?id=${user.id}`
+        })
+
         tableBody.appendChild(tr)
     })
 }
 
-document.addEventListener('DOMContentLoaded', Initialize)
+document.addEventListener('DOMContentLoaded', initialize)

@@ -1,9 +1,9 @@
-function Initialize() {
+function initialize() {
     let searchButton = document.querySelector('#searchButton')
-    searchButton.addEventListener('click', GetByGroup)
+    searchButton.addEventListener('click', getByGroup)
 }
 
-function GetByGroup() {
+function getByGroup() {
     const form = document.querySelector('#groupForm')
     const data = new FormData(form)
     const id = data.get('id')
@@ -11,17 +11,23 @@ function GetByGroup() {
     fetch(`http://localhost:30471/api/groups/${id}/users`)
         .then(response => {
             if (!response.ok) {
-                throw new Error('Rquest failed. Status: ' + response.status)
+                error = new Error('Rquest failed. Status: ' + response.status)
+                error.response = response
+                throw error
             }
             return response.json()
         })
-        .then(korisnici => CreateTableRows(korisnici))
+        .then(korisnici => createTableRows(korisnici))
         .catch(error => {
             console.error('Error:' + error.message)
+
+            if(error.response && error.response.status === 404) {
+                alert('YOU SHALL NOT PASS, NE POSTOJI GRUPA SA TIM ID-jem')
+            }
         })
 }
 
-function CreateTableRows(userData) {
+function createTableRows(userData) {
     let tableBody = document.querySelector('#userTableBody')
     tableBody.innerHTML = ''
 
@@ -53,4 +59,4 @@ function CreateTableRows(userData) {
     })
 }
 
-document.addEventListener('DOMContentLoaded', Initialize)
+document.addEventListener('DOMContentLoaded', initialize)

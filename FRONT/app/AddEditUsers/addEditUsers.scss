@@ -1,0 +1,47 @@
+@import '../styles/global';
+
+#mainContainer {
+    display: flex;
+    justify-content: center;
+    form {
+        margin: 50px;
+        max-width: 600px;
+        
+        div {
+            margin: 20px;
+
+            label {
+                display: inline-block;
+                width: 200px;
+                font-size: 20px;
+                font-weight: bold;
+            }
+
+            input {
+                height: 50px;
+                font-size: 20px;
+                border-radius: 6px;
+
+                &:hover {
+                    background-color: #9c99994f;
+                }
+            }
+
+            #submitButton {
+                margin-top: 10px;
+                font-size: 20px;
+                font-weight: bold;
+                padding: 10px;
+                border-radius: 6px;
+                background-color: #1E2A38;
+                color: #00BFA6;
+
+                &:hover {
+                    background-color: #00BFA6;
+                    color: #1E2A38;
+                }
+            }
+        }
+    }
+
+}
