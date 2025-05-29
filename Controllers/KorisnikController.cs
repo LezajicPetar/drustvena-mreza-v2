@@ -1,6 +1,7 @@
 ﻿using drustvena_mreza.Model;
 using drustvena_mreza.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.Sqlite;
 
 namespace drustvena_mreza.Controllers
 {
@@ -13,8 +14,10 @@ namespace drustvena_mreza.Controllers
         [HttpGet]
         public ActionResult<List<Korisnik>> GetAll()
         {
-            List<Korisnik> listaKorisnika = KorisnikRepository.Data.Values.ToList();
-            return Ok(listaKorisnika);
+            //List<Korisnik> listaKorisnika = KorisnikRepository.Data.Values.ToList();
+            //return Ok(listaKorisnika
+
+            return Ok(GetAllFromDatabase());
         }
 
         [HttpGet("{id}")]
@@ -82,6 +85,51 @@ namespace drustvena_mreza.Controllers
             korisnikRepository.Save();
 
             return NoContent();
+        }
+
+        private List<Korisnik> GetAllFromDatabase()
+        {
+            List<Korisnik> listaKorisnika = new List<Korisnik>();
+
+            try
+            {
+                using SqliteConnection connection = new SqliteConnection("Data Source = database/database.db");
+                connection.Open();
+
+                string query = "SELECT * FROM Users";
+                using SqliteCommand command = new SqliteCommand(query, connection);
+
+                using SqliteDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    int id = Convert.ToInt32(reader["Id"]);
+                    string userName = reader["Username"].ToString();
+                    string name = reader["Name"].ToString();
+                    string prezime = reader["Surname"].ToString();
+                    DateOnly datumRodjenja = DateOnly.Parse(reader["Birthday"].ToString());
+
+                    listaKorisnika.Add(new Korisnik(id, userName, name, prezime, datumRodjenja));
+                }
+            }
+            catch (SqliteException ex)
+            {
+                Console.WriteLine($"Greska pri konekciji ili neispravni SQL upit: {ex.Message}");
+            }
+            catch(FormatException ex)
+            {
+                Console.WriteLine($"Greska u konverziji podataka iz baze: {ex.Message}");
+            }
+            catch(InvalidOperationException ex)
+            {
+                Console.WriteLine($"Greška u konverziji podataka iz baze: {ex.Message}");
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"Neočekivana greška: {ex.Message}");
+            }
+
+            return listaKorisnika;
         }
 
         private int DodeliNoviId(List<int> identifikatori)
