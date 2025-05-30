@@ -101,5 +101,113 @@ namespace drustvena_mreza.Repositories
 
             return new Korisnik(idKorisnika, userName, name, surname, birthday);
         }
+
+        public Korisnik Create(Korisnik k)
+        {
+            int idUbacenog = -1;
+
+            try
+            {
+                using SqliteConnection connection = new SqliteConnection(connectionString);
+                connection.Open();
+
+                string query = @"INSERT INTO users (Username, Name, Surname, Birthday)
+                               VALUES (@username, @name, @surname, @birthday);
+                               SELECT LAST_INSERT_ROWID();";
+
+                using SqliteCommand command = new SqliteCommand(query, connection);
+
+                command.Parameters.AddWithValue("@username", k.Username);
+                command.Parameters.AddWithValue("@name", k.Ime);
+                command.Parameters.AddWithValue("@surname", k.Prezime);
+                command.Parameters.AddWithValue("@birthday", k.DatumRodjenja.ToString());
+
+                idUbacenog = Convert.ToInt32(command.ExecuteScalar());
+            }
+            catch (SqliteException ex)
+            {
+                Console.WriteLine($"Greska pri konekciji ili neispravni SQL upit: {ex.Message}");
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine($"Konekcija nije otvorena ili je otvorena više puta: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Neočekivana greška: {ex.Message}");
+            }
+
+            return GetById(idUbacenog);
+        }
+
+        public void Update(Korisnik k)
+        {
+            try
+            {
+                string query = @"
+                            UPDATE users
+                            SET
+                                Username = @username, 
+                                Name = @name, 
+                                Surname = @surname, 
+                                Birthday = @birthday
+                            WHERE Id = @id";
+
+                using SqliteConnection connection = new SqliteConnection(connectionString);
+                connection.Open();
+
+                using SqliteCommand command = new SqliteCommand(query, connection);
+
+                command.Parameters.AddWithValue("@username", k.Username);
+                command.Parameters.AddWithValue("@name", k.Ime);
+                command.Parameters.AddWithValue("@surname", k.Prezime);
+                command.Parameters.AddWithValue("@birthday", k.DatumRodjenja.ToString());
+                command.Parameters.AddWithValue("@id", k.Id);
+
+                command.ExecuteNonQuery();
+
+            }
+            catch (SqliteException ex)
+            {
+                Console.WriteLine($"Greska pri konekciji ili neispravni SQL upit: {ex.Message}");
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine($"Konekcija nije otvorena ili je otvorena više puta: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Neočekivana greška: {ex.Message}");
+            }
+        }
+
+        public void Delete(int id)
+        {
+            try
+            {
+                string query = "DELETE FROM users WHERE Id = @id";
+
+                using SqliteConnection connection = new SqliteConnection(connectionString);
+                connection.Open();
+
+                using SqliteCommand command = new SqliteCommand(query, connection);
+
+                command.Parameters.AddWithValue("@id", id);
+
+                command.ExecuteNonQuery();
+            }
+            catch (SqliteException ex)
+            {
+                Console.WriteLine($"Greska pri konekciji ili neispravni SQL upit: {ex.Message}");
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine($"Konekcija nije otvorena ili je otvorena više puta: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Neočekivana greška: {ex.Message}");
+            }
+        }
     }
 }

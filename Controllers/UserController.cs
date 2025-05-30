@@ -28,19 +28,40 @@ namespace drustvena_mreza.Controllers
             return Ok(userDbRepository.GetById(id));
         }
 
-        private int DodeliNoviId(List<int> identifikatori)
+        [HttpPost]
+        public ActionResult<Korisnik> Create([FromBody] Korisnik noviKorisnik)
         {
-            int maxId = 0;
-
-            foreach (int i in identifikatori)
+            if (string.IsNullOrWhiteSpace(noviKorisnik.Ime) ||
+                string.IsNullOrWhiteSpace(noviKorisnik.Prezime) ||
+                string.IsNullOrWhiteSpace(noviKorisnik.Username))
             {
-                if (i > maxId)
-                {
-                    maxId = i;
-                }
+                return BadRequest();
             }
 
-            return maxId + 1;
+            return Ok(userDbRepository.Create(noviKorisnik));
+        }
+
+        [HttpPut("{id}")]
+        public ActionResult<Korisnik> Update([FromBody] Korisnik k, int id)
+        {
+            if (string.IsNullOrWhiteSpace(k.Ime) ||
+                string.IsNullOrWhiteSpace(k.Prezime) ||
+                string.IsNullOrWhiteSpace(k.Username))
+            {
+                return BadRequest();
+            }
+
+            k.Id = id;
+            userDbRepository.Update(k);
+
+            return Ok(userDbRepository.GetById(id));
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult Delete(int id)
+        {
+            userDbRepository.Delete(id);
+            return NoContent();
         }
     }
 }

@@ -42,7 +42,7 @@ namespace drustvena_mreza.Repositories
 
             foreach (Korisnik k in Data.Values)
             {
-                lines.Add($"{k.Id},{k.UserName},{k.Ime},{k.Prezime},{k.DatumRodjenja.ToString("yyyy-MM-dd")}");
+                lines.Add($"{k.Id},{k.Username},{k.Ime},{k.Prezime},{k.DatumRodjenja.ToString("yyyy-MM-dd")}");
             }
 
             File.WriteAllLines(putanja, lines);
