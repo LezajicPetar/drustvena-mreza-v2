@@ -40,7 +40,7 @@ namespace drustvena_mreza.Repositories
         {
             List<string> lines = new List<string>();
 
-            foreach(Korisnik k in Data.Values)
+            foreach (Korisnik k in Data.Values)
             {
                 lines.Add($"{k.Id},{k.UserName},{k.Ime},{k.Prezime},{k.DatumRodjenja.ToString("yyyy-MM-dd")}");
             }
