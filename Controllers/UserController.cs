@@ -25,6 +25,10 @@ namespace drustvena_mreza.Controllers
         [HttpGet("{id}")]
         public ActionResult<Korisnik> GetById(int id)
         {
+            if(userDbRepository.GetById(id) == null)
+            {
+                return NotFound($"Book with {id} not found.");
+            }
             return Ok(userDbRepository.GetById(id));
         }
 
@@ -44,17 +48,18 @@ namespace drustvena_mreza.Controllers
         [HttpPut("{id}")]
         public ActionResult<Korisnik> Update([FromBody] Korisnik k, int id)
         {
-            if (string.IsNullOrWhiteSpace(k.Ime) ||
+            if (k == null ||
+                string.IsNullOrWhiteSpace(k.Ime) ||
                 string.IsNullOrWhiteSpace(k.Prezime) ||
                 string.IsNullOrWhiteSpace(k.Username))
             {
-                return BadRequest();
+                return BadRequest("Invalid data!");
             }
 
             k.Id = id;
             userDbRepository.Update(k);
 
-            return Ok(userDbRepository.GetById(id));
+            return Ok(k);
         }
 
         [HttpDelete("{id}")]

@@ -5,7 +5,12 @@ namespace drustvena_mreza.Repositories
 {
     public class UserDbRepository
     {
-        private const string connectionString = "Data Source = database/database.db";
+        private readonly string connectionString;
+
+        public UserDbRepository(IConfiguration configuration)
+        {
+            connectionString = configuration["ConnectionString:SQLiteConnection"];
+        }
 
         public List<Korisnik> GetAllFromDatabase()
         {
@@ -72,13 +77,21 @@ namespace drustvena_mreza.Repositories
 
                 using SqliteDataReader reader = command.ExecuteReader();
 
-                while (reader.Read())
+                if(reader.HasRows)
                 {
-                    idKorisnika = Convert.ToInt32(reader["Id"]);
-                    userName = reader["Username"].ToString();
-                    name = reader["Name"].ToString();
-                    surname = reader["Surname"].ToString();
-                    birthday = DateOnly.Parse(reader["Birthday"].ToString());
+                    while (reader.Read())
+                    {
+                        idKorisnika = Convert.ToInt32(reader["Id"]);
+                        userName = reader["Username"].ToString();
+                        name = reader["Name"].ToString();
+                        surname = reader["Surname"].ToString();
+                        birthday = DateOnly.Parse(reader["Birthday"].ToString());
+                    }
+
+                }
+                else
+                {
+                    return null;
                 }
 
             }
@@ -140,7 +153,7 @@ namespace drustvena_mreza.Repositories
             return GetById(idUbacenog);
         }
 
-        public void Update(Korisnik k)
+        public Korisnik Update(Korisnik k)
         {
             try
             {
@@ -165,7 +178,6 @@ namespace drustvena_mreza.Repositories
                 command.Parameters.AddWithValue("@id", k.Id);
 
                 command.ExecuteNonQuery();
-
             }
             catch (SqliteException ex)
             {
@@ -179,6 +191,8 @@ namespace drustvena_mreza.Repositories
             {
                 Console.WriteLine($"Neočekivana greška: {ex.Message}");
             }
+
+            return k;
         }
 
         public void Delete(int id)
