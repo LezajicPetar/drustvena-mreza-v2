@@ -11,9 +11,9 @@ namespace drustvena_mreza.Controllers
     {
         private UserDbRepository userDbRepository;
 
-        public UserController()
+        public UserController(IConfiguration configuration)
         {
-            userDbRepository = new UserDbRepository();
+            userDbRepository = new UserDbRepository(configuration);
         }
 
         [HttpGet]

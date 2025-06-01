@@ -40,18 +40,22 @@ namespace drustvena_mreza.Repositories
             catch (SqliteException ex)
             {
                 Console.WriteLine($"Greska pri konekciji ili neispravni SQL upit: {ex.Message}");
+                throw;
             }
             catch (FormatException ex)
             {
                 Console.WriteLine($"Greska u konverziji podataka iz baze: {ex.Message}");
+                throw;
             }
             catch (InvalidOperationException ex)
             {
                 Console.WriteLine($"Konekcija nije otvorena ili je otvorena više puta: {ex.Message}");
+                throw;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Neočekivana greška: {ex.Message}");
+                throw;
             }
 
             return listaKorisnika;
@@ -98,18 +102,22 @@ namespace drustvena_mreza.Repositories
             catch (SqliteException ex)
             {
                 Console.WriteLine($"Greska pri konekciji ili neispravni SQL upit: {ex.Message}");
+                throw;
             }
             catch (FormatException ex)
             {
                 Console.WriteLine($"Greska u konverziji podataka iz baze: {ex.Message}");
+                throw;
             }
             catch (InvalidOperationException ex)
             {
                 Console.WriteLine($"Konekcija nije otvorena ili je otvorena više puta: {ex.Message}");
+                throw;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Neočekivana greška: {ex.Message}");
+                throw;
             }
 
             return new Korisnik(idKorisnika, userName, name, surname, birthday);
@@ -117,8 +125,6 @@ namespace drustvena_mreza.Repositories
 
         public Korisnik Create(Korisnik k)
         {
-            int idUbacenog = -1;
-
             try
             {
                 using SqliteConnection connection = new SqliteConnection(connectionString);
@@ -135,22 +141,25 @@ namespace drustvena_mreza.Repositories
                 command.Parameters.AddWithValue("@surname", k.Prezime);
                 command.Parameters.AddWithValue("@birthday", k.DatumRodjenja.ToString());
 
-                idUbacenog = Convert.ToInt32(command.ExecuteScalar());
+                int idUbacenog = Convert.ToInt32(command.ExecuteScalar());
+
+                return k;
             }
             catch (SqliteException ex)
             {
                 Console.WriteLine($"Greska pri konekciji ili neispravni SQL upit: {ex.Message}");
+                throw;
             }
             catch (InvalidOperationException ex)
             {
                 Console.WriteLine($"Konekcija nije otvorena ili je otvorena više puta: {ex.Message}");
+                throw;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Neočekivana greška: {ex.Message}");
+                throw;
             }
-
-            return GetById(idUbacenog);
         }
 
         public Korisnik Update(Korisnik k)
@@ -178,24 +187,28 @@ namespace drustvena_mreza.Repositories
                 command.Parameters.AddWithValue("@id", k.Id);
 
                 command.ExecuteNonQuery();
+
+                return k;
+
             }
             catch (SqliteException ex)
             {
                 Console.WriteLine($"Greska pri konekciji ili neispravni SQL upit: {ex.Message}");
+                throw;
             }
             catch (InvalidOperationException ex)
             {
                 Console.WriteLine($"Konekcija nije otvorena ili je otvorena više puta: {ex.Message}");
+                throw;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Neočekivana greška: {ex.Message}");
+                throw;
             }
-
-            return k;
         }
 
-        public void Delete(int id)
+        public bool Delete(int id)
         {
             try
             {
@@ -208,19 +221,25 @@ namespace drustvena_mreza.Repositories
 
                 command.Parameters.AddWithValue("@id", id);
 
-                command.ExecuteNonQuery();
+                int rowsAffected = command.ExecuteNonQuery();
+
+                return rowsAffected > 0;
+
             }
             catch (SqliteException ex)
             {
                 Console.WriteLine($"Greska pri konekciji ili neispravni SQL upit: {ex.Message}");
+                throw;
             }
             catch (InvalidOperationException ex)
             {
                 Console.WriteLine($"Konekcija nije otvorena ili je otvorena više puta: {ex.Message}");
+                throw;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Neočekivana greška: {ex.Message}");
+                throw;
             }
         }
     }
