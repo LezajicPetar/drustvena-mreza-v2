@@ -12,7 +12,7 @@ namespace drustvena_mreza.Repositories
             connectionString = configuration["ConnectionString:SQLiteConnection"];
         }
 
-        public List<Korisnik> GetAllFromDatabase()
+        public List<Korisnik> GetPaged(int page, int pageSize)
         {
             List<Korisnik> listaKorisnika = new List<Korisnik>();
 
@@ -21,8 +21,11 @@ namespace drustvena_mreza.Repositories
                 using SqliteConnection connection = new SqliteConnection(connectionString);
                 connection.Open();
 
-                string query = "SELECT * FROM Users";
+                string query = "SELECT * FROM Users LIMIT @page OFFSET @offset";
                 using SqliteCommand command = new SqliteCommand(query, connection);
+
+                command.Parameters.AddWithValue("@page", pageSize);
+                command.Parameters.AddWithValue("@offset", pageSize * (page - 1));
 
                 using SqliteDataReader reader = command.ExecuteReader();
 
@@ -81,7 +84,7 @@ namespace drustvena_mreza.Repositories
 
                 using SqliteDataReader reader = command.ExecuteReader();
 
-                if(!reader.HasRows)
+                if (!reader.HasRows)
                 {
                     return null;
                 }
@@ -216,6 +219,36 @@ namespace drustvena_mreza.Repositories
 
                 return rowsAffected > 0;
 
+            }
+            catch (SqliteException ex)
+            {
+                Console.WriteLine($"Greska pri konekciji ili neispravni SQL upit: {ex.Message}");
+                throw;
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine($"Konekcija nije otvorena ili je otvorena više puta: {ex.Message}");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Neočekivana greška: {ex.Message}");
+                throw;
+            }
+        }
+
+        public int CountAll()
+        {
+            try
+            {
+                string query = "SELECT COUNT(*) FROM Users";
+
+                using SqliteConnection connection = new SqliteConnection(connectionString);
+                connection.Open();
+
+                using SqliteCommand command = new SqliteCommand(query, connection);
+
+                return Convert.ToInt32(command.ExecuteScalar());
             }
             catch (SqliteException ex)
             {

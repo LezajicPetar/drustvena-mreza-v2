@@ -2,6 +2,7 @@
 using drustvena_mreza.Repositories;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Data.Sqlite;
 
 namespace drustvena_mreza.Controllers
@@ -18,11 +19,20 @@ namespace drustvena_mreza.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<Korisnik>> GetAll()
+        public ActionResult GetPaged([FromQuery] int page = 1, [FromQuery] int pageSize = 2)
         {
             try
             {
-                return Ok(userDbRepository.GetAllFromDatabase());
+                if(page < 1 || pageSize < 1)
+                {
+                    return BadRequest("Stranica i velicina stranice moraju biti veci od 1.");
+                }
+                Object result = new
+                {
+                    Data = userDbRepository.GetPaged(page, pageSize),
+                    TotalCount = userDbRepository.CountAll()
+                };
+                return Ok(result);
             }
             catch(Exception ex)
             {
