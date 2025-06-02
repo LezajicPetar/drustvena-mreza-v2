@@ -64,10 +64,10 @@ namespace drustvena_mreza.Repositories
         public Korisnik GetById(int id)
         {
             int idKorisnika = -1;
-            string userName = "";
+            string username = "";
             string name = "";
             string surname = "";
-            DateOnly birthday = DateOnly.FromDateTime(DateTime.Now);
+            DateOnly birthyday = DateOnly.FromDateTime(DateTime.Now);
 
             try
             {
@@ -81,23 +81,19 @@ namespace drustvena_mreza.Repositories
 
                 using SqliteDataReader reader = command.ExecuteReader();
 
-                if(reader.HasRows)
-                {
-                    while (reader.Read())
-                    {
-                        idKorisnika = Convert.ToInt32(reader["Id"]);
-                        userName = reader["Username"].ToString();
-                        name = reader["Name"].ToString();
-                        surname = reader["Surname"].ToString();
-                        birthday = DateOnly.Parse(reader["Birthday"].ToString());
-                    }
-
-                }
-                else
+                if(!reader.HasRows)
                 {
                     return null;
                 }
-
+                while (reader.Read())
+                {
+                    idKorisnika = Convert.ToInt32(reader["Id"]);
+                    username = reader["Username"].ToString();
+                    name = reader["Name"].ToString();
+                    surname = reader["Surname"].ToString();
+                    birthyday = DateOnly.Parse(reader["Birthday"].ToString());
+                }
+                return new Korisnik(idKorisnika, username, name, surname, birthyday);
             }
             catch (SqliteException ex)
             {
@@ -119,8 +115,6 @@ namespace drustvena_mreza.Repositories
                 Console.WriteLine($"Neočekivana greška: {ex.Message}");
                 throw;
             }
-
-            return new Korisnik(idKorisnika, userName, name, surname, birthday);
         }
 
         public Korisnik Create(Korisnik k)
@@ -186,10 +180,7 @@ namespace drustvena_mreza.Repositories
                 command.Parameters.AddWithValue("@birthday", k.DatumRodjenja.ToString());
                 command.Parameters.AddWithValue("@id", k.Id);
 
-                command.ExecuteNonQuery();
-
-                return k;
-
+                return command.ExecuteNonQuery() > 0 ? k : null;
             }
             catch (SqliteException ex)
             {

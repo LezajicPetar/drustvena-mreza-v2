@@ -1,5 +1,6 @@
 ﻿using drustvena_mreza.Model;
 using drustvena_mreza.Repositories;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
 
@@ -19,54 +20,90 @@ namespace drustvena_mreza.Controllers
         [HttpGet]
         public ActionResult<List<Korisnik>> GetAll()
         {
-            return Ok(userDbRepository.GetAllFromDatabase());
+            try
+            {
+                return Ok(userDbRepository.GetAllFromDatabase());
+            }
+            catch(Exception ex)
+            {
+                return Problem($"Dogodila se greska pri dobavljanju korisnika! {ex.Message}");
+            }
         }
 
         [HttpGet("{id}")]
         public ActionResult<Korisnik> GetById(int id)
         {
-            if(userDbRepository.GetById(id) == null)
+            try
             {
-                return NotFound($"Book with {id} not found.");
+                if (userDbRepository.GetById(id) == null)
+                {
+                    return NotFound($"Book with {id} not found.");
+                }
+                return Ok(userDbRepository.GetById(id));
             }
-            return Ok(userDbRepository.GetById(id));
+            catch ( Exception ex )
+            {
+                return Problem($"Dogodio se problem kod pretrage. {ex.Message}");
+            }
         }
 
         [HttpPost]
         public ActionResult<Korisnik> Create([FromBody] Korisnik noviKorisnik)
         {
-            if (string.IsNullOrWhiteSpace(noviKorisnik.Ime) ||
-                string.IsNullOrWhiteSpace(noviKorisnik.Prezime) ||
-                string.IsNullOrWhiteSpace(noviKorisnik.Username))
+            try
             {
-                return BadRequest();
+                if (noviKorisnik == null ||
+                    string.IsNullOrWhiteSpace(noviKorisnik.Ime) ||
+                    string.IsNullOrWhiteSpace(noviKorisnik.Prezime) ||
+                    string.IsNullOrWhiteSpace(noviKorisnik.Username))
+                {
+                    return BadRequest();
+                }
+                return Ok(userDbRepository.Create(noviKorisnik));
             }
-
-            return Ok(userDbRepository.Create(noviKorisnik));
+            catch (Exception ex)
+            {
+                return Problem($"Dogodila se greska prilikom kreiranja korisnika. {ex.Message}");
+            }
         }
 
         [HttpPut("{id}")]
         public ActionResult<Korisnik> Update([FromBody] Korisnik k, int id)
         {
-            if (k == null ||
-                string.IsNullOrWhiteSpace(k.Ime) ||
-                string.IsNullOrWhiteSpace(k.Prezime) ||
-                string.IsNullOrWhiteSpace(k.Username))
+            try
             {
-                return BadRequest("Invalid data!");
+                if (
+                 string.IsNullOrWhiteSpace(k.Ime) ||
+                 string.IsNullOrWhiteSpace(k.Prezime) || 
+                 string.IsNullOrWhiteSpace(k.Username))
+                {
+                    return BadRequest("Invalid data!");
+                }
+                else if(userDbRepository.Update(k) == null)
+                {
+                    return NotFound("Korisnik nije pronadjen, doslo je do greske.");
+                }
+
+                k.Id = id;
+                return Ok(k);
             }
-
-            k.Id = id;
-            userDbRepository.Update(k);
-
-            return Ok(k);
+            catch(Exception ex)
+            {
+                return Problem($"Dogodila se greska prilikom azuriranja korisnika. {ex.Message}");
+            }
         }
 
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
-            userDbRepository.Delete(id);
-            return NoContent();
+            try
+            {
+                return userDbRepository.Delete(id) ? NoContent() : NotFound();
+            }
+            catch(Exception ex)
+            {
+                return Problem($"Dogodila se greskom prilikom brisanja. {ex.Message}");
+            }
         }
     }
 }
