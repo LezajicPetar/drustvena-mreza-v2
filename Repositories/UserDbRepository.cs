@@ -12,9 +12,9 @@ namespace drustvena_mreza.Repositories
             connectionString = configuration["ConnectionString:SQLiteConnection"];
         }
 
-        public List<Korisnik> GetPaged(int page, int pageSize)
+        public List<User> GetPaged(int page, int pageSize)
         {
-            List<Korisnik> listaKorisnika = new List<Korisnik>();
+            List<User> listaKorisnika = new List<User>();
 
             try
             {
@@ -37,7 +37,7 @@ namespace drustvena_mreza.Repositories
                     string prezime = reader["Surname"].ToString();
                     DateOnly datumRodjenja = DateOnly.Parse(reader["Birthday"].ToString());
 
-                    listaKorisnika.Add(new Korisnik(id, userName, name, prezime, datumRodjenja));
+                    listaKorisnika.Add(new User(id, userName, name, prezime, datumRodjenja));
                 }
             }
             catch (SqliteException ex)
@@ -64,7 +64,7 @@ namespace drustvena_mreza.Repositories
             return listaKorisnika;
         }
 
-        public Korisnik GetById(int id)
+        public User GetById(int id)
         {
             int idKorisnika = -1;
             string username = "";
@@ -96,7 +96,7 @@ namespace drustvena_mreza.Repositories
                     surname = reader["Surname"].ToString();
                     birthyday = DateOnly.Parse(reader["Birthday"].ToString());
                 }
-                return new Korisnik(idKorisnika, username, name, surname, birthyday);
+                return new User(idKorisnika, username, name, surname, birthyday);
             }
             catch (SqliteException ex)
             {
@@ -120,7 +120,7 @@ namespace drustvena_mreza.Repositories
             }
         }
 
-        public Korisnik Create(Korisnik k)
+        public User Create(User k)
         {
             try
             {
@@ -159,7 +159,7 @@ namespace drustvena_mreza.Repositories
             }
         }
 
-        public Korisnik Update(Korisnik k)
+        public User Update(User k)
         {
             try
             {

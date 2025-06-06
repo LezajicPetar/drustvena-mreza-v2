@@ -41,7 +41,7 @@ namespace drustvena_mreza.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Korisnik> GetById(int id)
+        public ActionResult<User> GetById(int id)
         {
             try
             {
@@ -58,7 +58,7 @@ namespace drustvena_mreza.Controllers
         }
 
         [HttpPost]
-        public ActionResult<Korisnik> Create([FromBody] Korisnik noviKorisnik)
+        public ActionResult<User> Create([FromBody] User noviKorisnik)
         {
             try
             {
@@ -78,7 +78,7 @@ namespace drustvena_mreza.Controllers
         }
 
         [HttpPut("{id}")]
-        public ActionResult<Korisnik> Update([FromBody] Korisnik k, int id)
+        public ActionResult<User> Update([FromBody] User k, int id)
         {
             try
             {

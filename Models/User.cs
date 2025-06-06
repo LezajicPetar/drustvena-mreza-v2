@@ -1,6 +1,6 @@
 ﻿namespace drustvena_mreza.Model
 {
-    public class Korisnik
+    public class User
     {
         public int Id { get; set; }
         public string Username { get; set; }
@@ -8,7 +8,7 @@
         public string Prezime { get; set; }
         public DateOnly DatumRodjenja { get; set; }
 
-        public Korisnik(int id, string userName, string ime, string prezime, DateOnly datumRodjenja)
+        public User(int id, string userName, string ime, string prezime, DateOnly datumRodjenja)
         {
             this.Id = id;
             this.Username = userName;
