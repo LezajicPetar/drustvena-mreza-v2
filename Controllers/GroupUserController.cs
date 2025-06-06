@@ -1,38 +1,72 @@
 ﻿using drustvena_mreza.Model;
-using drustvena_mreza.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.ObjectPool;
+using Microsoft.Data.Sqlite;
+using System.Collections.Generic;
+using drustvena_mreza.Model;
 
 namespace drustvena_mreza.Controllers
 {
-    [Route("api/groups/{groupId}/users")]
+    [Route("api/groups")]
     [ApiController]
-    public class GroupUserController : ControllerBase
+    public class GroupController : ControllerBase
     {
-        ////KorisnikRepository korisnikRepository = new KorisnikRepository();
-        //GroupDbRepository grupaRepository = new GroupDbRepository();
+        [HttpGet]
+        public ActionResult<List<Group>> GetAll()
+        {
+            List<Group> groups = GetAllFromDatabase();
+            return Ok(groups);
+        }
 
-        //[HttpGet]
-        //public ActionResult<List<User>> GetUsersByGroup(int groupId)
-        //{
-        //    if (!GroupDbRepository.Data.ContainsKey(groupId))
-        //    {
-        //        return NotFound();
-        //    }
+        private List<Group> GetAllFromDatabase()
+        {
+            List<Group> result = new List<Group>();
 
-        //    List<User> korisnici = new List<User>();
-        //    foreach (Group g in GroupDbRepository.Data.Values)
-        //    {
-        //        if (g.Id == groupId)
-        //        {
-        //            korisnici = g.ListaKorisnika;
-        //        }
-        //    }
+            using (SqliteConnection connection = new SqliteConnection("Data Source=database/socialnetwork.db"))
+            {
+                connection.Open();
+                string query = "SELECT Id, Name, CreationDate FROM Groups";
 
-        //    return Ok(korisnici);
-        //}
+                using (SqliteCommand command = new SqliteCommand(query, connection))
+                using (SqliteDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Group group = new Group(
+      reader.GetInt32(0),
+      reader.GetString(1),
+      DateOnly.Parse(reader.GetString(2))
+  );
+                        result.Add(group);
+                    }
+                }
+            }
 
-
+            return result;
+        }
     }
-
 }
+
+
+////KorisnikRepository korisnikRepository = new KorisnikRepository();
+//GroupDbRepository grupaRepository = new GroupDbRepository();
+
+//[HttpGet]
+//public ActionResult<List<User>> GetUsersByGroup(int groupId)
+//{
+//    if (!GroupDbRepository.Data.ContainsKey(groupId))
+//    {
+//        return NotFound();
+//    }
+
+//    List<User> korisnici = new List<User>();
+//    foreach (Group g in GroupDbRepository.Data.Values)
+//    {
+//        if (g.Id == groupId)
+//        {
+//            korisnici = g.ListaKorisnika;
+//        }
+//    }
+
+//    return Ok(korisnici);
+//}
+
