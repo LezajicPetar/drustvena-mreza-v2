@@ -1,8 +1,6 @@
 ﻿using drustvena_mreza.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
-using System.Collections.Generic;
-using drustvena_mreza.Model;
 
 namespace drustvena_mreza.Controllers
 {

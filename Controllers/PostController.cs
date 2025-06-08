@@ -38,7 +38,7 @@ namespace drustvena_mreza.Controllers
                 {
                     return BadRequest("Sadrzaj i datum su obavezni.");
                 }
-                if (!postDbRepository.Exists(post.UserId))
+                if (!postDbRepository.UserExists(post.UserId))
                 {
                     return NotFound("Korisnik nije pronadjen.");
                 }
@@ -48,6 +48,19 @@ namespace drustvena_mreza.Controllers
             catch(Exception ex)
             {
                 return Problem($"Dogodila se greska: {ex.Message}");
+            }
+        }
+
+        [HttpDelete("posts/postId")]
+        public IActionResult Delete(int postId)
+        {
+            try
+            {
+                return postDbRepository.Delete(postId) ? NoContent() : NotFound();
+            }
+            catch(Exception ex)
+            {
+                return Problem($"Dogodila se greska. {ex.Message}");
             }
         }
     }
