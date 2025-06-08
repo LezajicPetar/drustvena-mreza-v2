@@ -49,7 +49,6 @@ namespace drustvena_mreza.Repositories
 
                     sviPostovi.Add(post);
                 }
-
                 return sviPostovi;
             }
             catch (SqliteException ex)
@@ -72,6 +71,63 @@ namespace drustvena_mreza.Repositories
                 Console.WriteLine($"Neočekivana greška: {ex.Message}");
                 throw;
             }
+        }
+
+        public Post Create(Post post)
+        {
+            try
+            {
+                SqliteConnection connection = new SqliteConnection(connectionString);
+                connection.Open();
+
+                string query = @"INSERT INTO Posts (UserId, Content, Date)
+                             VALUES (@userId, @content, @date);
+                             SELECT LAST_INSERT_ROWID();";
+
+
+                SqliteCommand command = new SqliteCommand(query, connection);
+
+                command.Parameters.AddWithValue("@userId", post.UserId);
+                command.Parameters.AddWithValue("@content", post.Content);
+                command.Parameters.AddWithValue("@date", post.Date.ToString());
+
+                int postId = Convert.ToInt32(command.ExecuteScalar());
+
+                return post;
+            }
+            catch (SqliteException ex)
+            {
+                Console.WriteLine($"Greska pri konekciji ili neispravni SQL upit: {ex.Message}");
+                throw;
+            }
+            catch (FormatException ex)
+            {
+                Console.WriteLine($"Greska u konverziji podataka iz baze: {ex.Message}");
+                throw;
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine($"Konekcija nije otvorena ili je otvorena više puta: {ex.Message}");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Neočekivana greška: {ex.Message}");
+                throw;
+            }
+        }
+
+        public bool Exists(int userId)
+        {
+            SqliteConnection connection = new SqliteConnection(connectionString);
+            connection.Open();
+
+            SqliteCommand command = new SqliteCommand("SELECT * FROM Users Where Id=@userId", connection);
+            command.Parameters.AddWithValue("@userId", userId);
+
+            int result = Convert.ToInt32(command.ExecuteScalar());
+
+            return result == 1;
         }
     }
 }
